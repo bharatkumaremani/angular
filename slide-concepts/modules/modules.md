@@ -50,7 +50,7 @@ Below is an explanation of the metadata properties used in the `@NgModule` decor
 ### Example Usage:
 
 ```typescript
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -58,7 +58,9 @@ import { AppComponent } from './app.component';
 import { MyCustomComponent } from './my-custom/my-custom.component';
 import { MyService } from './services/my-service.service';
 import { RouterModule, Routes } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
+// Routes configuration (example)
 const routes: Routes = [
   { path: '', component: AppComponent },
   { path: 'custom', component: MyCustomComponent }
@@ -66,16 +68,33 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
-    AppComponent,
+    AppComponent,          // Components, directives, and pipes that belong to this module
     MyCustomComponent
   ],
   imports: [
-    BrowserModule,
+    BrowserModule,         // External modules used by this module
     FormsModule,
     HttpClientModule,
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes),
+    CommonModule
   ],
-  providers: [MyService],
-  bootstrap: [AppComponent]
+  providers: [
+    MyService              // Services that this module contributes to the global collection
+  ],
+  bootstrap: [
+    AppComponent           // The main application view, called the root component, that hosts all other app views
+  ],
+  entryComponents: [
+    MyCustomComponent      // Components that are not referenced in the template but are loaded dynamically
+  ],
+  exports: [
+    MyCustomComponent      // Components, directives, and pipes that this module can export to other modules
+  ],
+  schemas: [
+    CUSTOM_ELEMENTS_SCHEMA, // Allows custom elements to be used in the templates
+    NO_ERRORS_SCHEMA        // Suppresses errors for any unknown elements or attributes
+  ],
+  id: 'app-module-id',        // An optional identifier for the module
+  // Custom elements can be added here if needed (typically for libraries)
 })
 export class AppModule { }
